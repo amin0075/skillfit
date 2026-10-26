@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping. skillfit has no runtime dependencies and needs Node 20+.
+Thanks for helping. skillfit has no runtime dependencies and needs Node 22+.
 
 ```bash
 npm test

@@ -164,7 +164,7 @@ Next.js 16.2+ ships version-matched docs in `node_modules/next/dist/docs`, and `
 
 ## Contributing
 
-Issues and PRs welcome, especially new detection signals and agent targets. See [CONTRIBUTING.md](CONTRIBUTING.md). Run `npm test` (Node 20+, no dependencies).
+Issues and PRs welcome, especially new detection signals and agent targets. See [CONTRIBUTING.md](CONTRIBUTING.md). Run `npm test` (Node 22+, no dependencies).
 
 ## License
 
