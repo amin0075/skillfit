@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "skillfit project config (docs/agent/config.json)",
+  "title": "stackfit project config (docs/agent/config.json)",
   "type": "object",
   "required": [
     "schemaVersion"

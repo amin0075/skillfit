@@ -50,17 +50,17 @@ export function auditCatalog(catalog, { now = Date.now() } = {}) {
       if (!sources.skills[name]) warnings.push(`${name}: no skill-sources.json entry (add kind: custom or external)`);
       continue;
     }
-    if (sources.skills[name]?.source) errors.push(`${name}: enabled but not vendored yet; run \`skillfit refresh --skill ${name}\``);
-    else errors.push(`skillfit.json: unknown skill '${name}'`);
+    if (sources.skills[name]?.source) errors.push(`${name}: enabled but not vendored yet; run \`stackfit refresh --skill ${name}\``);
+    else errors.push(`stackfit.json: unknown skill '${name}'`);
   }
   for (const name of directories) {
-    if (!registry.skills.includes(name)) warnings.push(`${name}: in skills/ but not enabled in skillfit.json`);
+    if (!registry.skills.includes(name)) warnings.push(`${name}: in skills/ but not enabled in stackfit.json`);
   }
 
   const packed = new Set();
   for (const [packName, pack] of Object.entries(registry.packs)) {
     for (const name of pack.skills) {
-      if (!registry.skills.includes(name)) errors.push(`pack '${packName}': skill '${name}' is not enabled in skillfit.json`);
+      if (!registry.skills.includes(name)) errors.push(`pack '${packName}': skill '${name}' is not enabled in stackfit.json`);
       packed.add(name);
     }
     if (pack.always && pack.detect) warnings.push(`pack '${packName}': 'always' makes 'detect' redundant`);

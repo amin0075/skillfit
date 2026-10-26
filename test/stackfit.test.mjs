@@ -62,7 +62,7 @@ test("sync renders skills, rules, commands, and agents for Cursor and Claude Cod
     assert.match(agent, /model: inherit/);
     assert.match(agent, /permissionMode: plan/);
 
-    assert.match(await read(resolve(project, ".git/info/exclude")), /\.skillfit\.lock\.json/);
+    assert.match(await read(resolve(project, ".git/info/exclude")), /\.stackfit\.lock\.json/);
     const again = run(["status", "--project", project, "--check"], { catalog, env: { REVIEWER_HANDLE: "@reviewer" } });
     assert.equal(again.status, 0, again.stdout);
     assert.match(again.stdout, /up to date/);
@@ -161,7 +161,7 @@ test("agent-config projects migrate: legacy lock and .claude/commands symlink", 
     const result = run(["sync", "--project", project], { catalog });
     assert.equal(result.status, 0, result.stderr);
     assert.ok(!(await lstat(resolve(project, ".claude/commands"))).isSymbolicLink());
-    assert.ok(existsSync(resolve(project, ".skillfit.lock.json")));
+    assert.ok(existsSync(resolve(project, ".stackfit.lock.json")));
     assert.ok(!existsSync(resolve(project, ".agent-config.lock.json")), "legacy lock is replaced");
   } finally {
     await rm(project, { recursive: true, force: true });
@@ -173,9 +173,9 @@ test("--all selects projects from the matching machine profile, with per-project
   const catalog = await makeCatalog();
   const workspace = await makeProject();
   for (const name of ["app-one", "app-two", "other"]) await mkdir(resolve(workspace, "code", name, ".git"), { recursive: true });
-  const localConfig = resolve(workspace, "skillfit.local.json");
+  const localConfig = resolve(workspace, "stackfit.local.json");
   await writeTree(workspace, {
-    "skillfit.local.json": {
+    "stackfit.local.json": {
       schemaVersion: 1,
       machines: [
         { id: "win", match: { platform: "win32", hostname: "box" }, roots: [resolve(workspace, "code")], projects: ["app-one", "app-two"] },
@@ -184,13 +184,13 @@ test("--all selects projects from the matching machine profile, with per-project
     },
   });
   try {
-    const env = { SKILLFIT_LOCAL_CONFIG: localConfig };
-    const win = run(["status", "--all"], { catalog, env: { ...env, SKILLFIT_PLATFORM: "win32", SKILLFIT_HOSTNAME: "box" } });
+    const env = { STACKFIT_LOCAL_CONFIG: localConfig };
+    const win = run(["status", "--all"], { catalog, env: { ...env, STACKFIT_PLATFORM: "win32", STACKFIT_HOSTNAME: "box" } });
     assert.equal(win.status, 0, win.stderr);
     assert.match(win.stdout, /machine: win/);
     assert.match(win.stdout, /app-one:/);
     assert.doesNotMatch(win.stdout, /other:/);
-    const mac = run(["sync", "--all"], { catalog, env: { ...env, SKILLFIT_PLATFORM: "darwin" } });
+    const mac = run(["sync", "--all"], { catalog, env: { ...env, STACKFIT_PLATFORM: "darwin" } });
     assert.equal(mac.status, 0, mac.stderr);
     assert.match(mac.stdout, /app-two: .*\[adapter-only\]/);
     assert.match(mac.stdout, /packs: core, research/);
@@ -253,11 +253,11 @@ test("catalog init --starter creates a valid catalog without personal content", 
   try {
     const result = run(["catalog", "init", target, "--starter"]);
     assert.equal(result.status, 0, result.stderr);
-    for (const file of ["skillfit.json", "skill-sources.json", ".env.example", ".gitignore", "skillfit.local.example.json", "skills/next-server-security/SKILL.md"]) {
+    for (const file of ["stackfit.json", "skill-sources.json", ".env.example", ".gitignore", "stackfit.local.example.json", "skills/next-server-security/SKILL.md"]) {
       assert.ok(existsSync(resolve(target, file)), file);
     }
     const audit = run(["audit"], { catalog: target });
-    assert.match(audit.stderr, /not vendored yet; run `skillfit refresh/, "upstream skills are fetched by refresh");
+    assert.match(audit.stderr, /not vendored yet; run `stackfit refresh/, "upstream skills are fetched by refresh");
 
     const empty = resolve(parent, "empty");
     assert.equal(run(["catalog", "init", empty]).status, 0);
@@ -276,5 +276,23 @@ test("a missing catalog gives a helpful error", async () => {
     assert.match(result.stderr, /No catalog found/);
   } finally {
     await rm(empty, { recursive: true, force: true });
+  }
+});
+
+test("projects synced by the old skillfit name migrate their lock", async () => {
+  const catalog = await makeCatalog();
+  const project = await makeProject();
+  try {
+    assert.equal(run(["sync", "--project", project], { catalog }).status, 0);
+    const { rename } = await import("node:fs/promises");
+    await rename(resolve(project, ".stackfit.lock.json"), resolve(project, ".skillfit.lock.json"));
+    const again = run(["sync", "--project", project], { catalog });
+    assert.equal(again.status, 0, again.stderr);
+    assert.match(again.stdout, /up to date/, "no false collisions from the old lock");
+    assert.ok(existsSync(resolve(project, ".stackfit.lock.json")));
+    assert.ok(!existsSync(resolve(project, ".skillfit.lock.json")));
+  } finally {
+    await rm(project, { recursive: true, force: true });
+    await rm(catalog, { recursive: true, force: true });
   }
 });

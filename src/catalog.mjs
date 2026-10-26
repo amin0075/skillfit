@@ -2,8 +2,8 @@ import { existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, isAbsolute, resolve } from "node:path";
 
-export const REGISTRY_FILE = "skillfit.json";
-export const LOCAL_FILE = "skillfit.local.json";
+export const REGISTRY_FILE = "stackfit.json";
+export const LOCAL_FILE = "stackfit.local.json";
 export const SOURCES_FILE = "skill-sources.json";
 export const SOURCES_LOCK_FILE = "skill-sources.lock.json";
 
@@ -46,24 +46,24 @@ function findUp(start, file) {
   }
 }
 
-// Catalog = the folder holding skillfit.json, skills/, rules/, commands/, agents/.
-// Resolution: --catalog, then SKILLFIT_CATALOG (shell or ./.env), then the nearest
-// skillfit.json above the working directory, then ~/.skillfit.
+// Catalog = the folder holding stackfit.json, skills/, rules/, commands/, agents/.
+// Resolution: --catalog, then STACKFIT_CATALOG (shell or ./.env), then the nearest
+// stackfit.json above the working directory, then ~/.stackfit.
 export function resolveCatalog(explicit) {
   loadEnvFile(resolve(process.cwd(), ".env"));
   const candidates = [
     explicit && expandHome(explicit),
-    process.env.SKILLFIT_CATALOG && expandHome(process.env.SKILLFIT_CATALOG),
+    process.env.STACKFIT_CATALOG && expandHome(process.env.STACKFIT_CATALOG),
     findUp(process.cwd(), REGISTRY_FILE),
-    resolve(homedir(), ".skillfit"),
+    resolve(homedir(), ".stackfit"),
   ].filter(Boolean);
   const root = candidates.find((path) => existsSync(resolve(path, REGISTRY_FILE)));
   if (!root) {
-    const tried = explicit || process.env.SKILLFIT_CATALOG;
+    const tried = explicit || process.env.STACKFIT_CATALOG;
     throw new Error(
       tried
         ? `No ${REGISTRY_FILE} in ${expandHome(tried)}`
-        : `No catalog found. Run \`skillfit catalog init <dir> --starter\`, or set SKILLFIT_CATALOG / --catalog.`,
+        : `No catalog found. Run \`stackfit catalog init <dir> --starter\`, or set STACKFIT_CATALOG / --catalog.`,
     );
   }
   loadEnvFile(resolve(root, ".env"));
@@ -74,7 +74,7 @@ export function catalogPaths(root) {
   return {
     root,
     registryPath: resolve(root, REGISTRY_FILE),
-    localPath: process.env.SKILLFIT_LOCAL_CONFIG ? resolve(process.env.SKILLFIT_LOCAL_CONFIG) : resolve(root, LOCAL_FILE),
+    localPath: process.env.STACKFIT_LOCAL_CONFIG ? resolve(process.env.STACKFIT_LOCAL_CONFIG) : resolve(root, LOCAL_FILE),
     sourcesPath: resolve(root, SOURCES_FILE),
     sourcesLockPath: resolve(root, SOURCES_LOCK_FILE),
     skills: resolve(root, "skills"),

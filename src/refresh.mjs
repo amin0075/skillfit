@@ -31,7 +31,7 @@ export async function refreshSkills(catalog, options) {
     return;
   }
 
-  const tempRoot = await mkdtemp(resolve(tmpdir(), "skillfit-refresh-"));
+  const tempRoot = await mkdtemp(resolve(tmpdir(), "stackfit-refresh-"));
   const lock = loadJson(catalog.sourcesLockPath, { schemaVersion: 1, skills: {} });
   const repositories = new Map();
   try {
@@ -60,5 +60,5 @@ export async function refreshSkills(catalog, options) {
   } finally {
     await rm(tempRoot, { recursive: true, force: true });
   }
-  console.log("Review with `git diff`, run `skillfit audit`, then commit the catalog.");
+  console.log("Review with `git diff`, run `stackfit audit`, then commit the catalog.");
 }

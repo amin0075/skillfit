@@ -8,8 +8,9 @@ import { expandEnv, loadJson, loadSources } from "./catalog.mjs";
 import { resolveSelection } from "./detect.mjs";
 import { claudeAgent, claudeCommand, claudeRule, cursorRule, setFrontmatter } from "./render.mjs";
 
-export const LOCK_NAME = ".skillfit.lock.json";
-const LEGACY_LOCK_NAME = ".agent-config.lock.json";
+export const LOCK_NAME = ".stackfit.lock.json";
+// Older names of the lock, from before the tool was called stackfit; read once, then replaced.
+const LEGACY_LOCK_NAMES = [".skillfit.lock.json", ".agent-config.lock.json"];
 const LOCAL_EXCLUDES = [LOCK_NAME, ".agents/", ".cursor/", ".claude/"];
 const LOCAL_SCAFFOLD_EXCLUDES = ["CLAUDE.md", "docs/agent/"];
 
@@ -28,9 +29,8 @@ const projectKey = (projectPath, destination) => toPosixPath(relative(projectPat
 const normalizeEntries = (entries = {}) => Object.fromEntries(Object.entries(entries).map(([key, value]) => [toPosixPath(key), value]));
 
 function loadLock(projectPath) {
-  const current = resolve(projectPath, LOCK_NAME);
-  const legacy = resolve(projectPath, LEGACY_LOCK_NAME);
-  const previous = loadJson(existsSync(current) ? current : legacy, { files: {}, links: {} });
+  const found = [LOCK_NAME, ...LEGACY_LOCK_NAMES].map((name) => resolve(projectPath, name)).find((path) => existsSync(path));
+  const previous = loadJson(found, { files: {}, links: {} }) ?? { files: {}, links: {} };
   return { ...previous, files: normalizeEntries(previous.files), links: normalizeEntries(previous.links) };
 }
 
@@ -129,7 +129,7 @@ export async function createPlan(catalog, projectPath, registry, { scaffold = tr
   for (const skill of selection.skills) {
     const source = resolve(catalog.skills, skill);
     if (!existsSync(resolve(source, "SKILL.md"))) {
-      throw new Error(`Skill '${skill}' is enabled but not in the catalog. Run \`skillfit refresh --skill ${skill}\` or add skills/${skill}/SKILL.md.`);
+      throw new Error(`Skill '${skill}' is enabled but not in the catalog. Run \`stackfit refresh --skill ${skill}\` or add skills/${skill}/SKILL.md.`);
     }
     await addTree(plan, source, resolve(projectPath, ".agents/skills", skill), renderOptions[skill]?.render);
   }
@@ -180,7 +180,7 @@ async function ensureLocalGitExclude(projectPath, { scaffold = true } = {}) {
   if (!additions.length) return;
   await mkdir(dirname(excludePath), { recursive: true });
   const prefix = existing && !existing.endsWith("\n") ? "\n" : "";
-  await writeFile(excludePath, `${existing}${prefix}# Managed locally by skillfit\n${additions.join("\n")}\n`);
+  await writeFile(excludePath, `${existing}${prefix}# Managed locally by stackfit\n${additions.join("\n")}\n`);
 }
 
 // After removing a dropped skill's files, remove its now-empty folders (never the project root).
@@ -273,7 +273,7 @@ export async function applyPlan(catalog, projectPath, planData, options) {
       files: nextFiles,
       links: nextLinks,
     }, null, 2)}\n`);
-    await rm(resolve(projectPath, LEGACY_LOCK_NAME), { force: true });
+    for (const name of LEGACY_LOCK_NAMES) await rm(resolve(projectPath, name), { force: true });
   }
   return actions;
 }

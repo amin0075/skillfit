@@ -1,5 +1,5 @@
 {
-  "$schema": "https://unpkg.com/skillfit/schemas/skillfit.local.schema.json",
+  "$schema": "https://unpkg.com/stackfit/schemas/stackfit.local.schema.json",
   "schemaVersion": 1,
   "machines": [
     {

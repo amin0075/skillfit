@@ -31,7 +31,7 @@ export async function initProject(projectPath, options) {
     "AGENTS.md": "# Repository agent instructions\n\nRead `docs/agent/index.md` first, then load only the pages and repo-owned components relevant to the task. Repository instructions take precedence over shared defaults when they conflict.\n",
     "CLAUDE.md": "@AGENTS.md\n",
     "docs/agent/config.json": json({ schemaVersion: 1, packs: [], excludePacks: [], skills: [], overrides: { skills: [], agents: [], commands: [], rules: [] } }),
-    "docs/agent/index.md": "# Agent context\n\nRead only the page relevant to the task:\n\n- `architecture.md`: structure, boundaries, and generated code\n- `design-system.md`: UI primitives, tokens, and visual conventions\n- `workflows.md`: package manager, checks, Git, PR, and release policy\n- `rules/*.md`: additional repository constraints, when relevant\n\nRepository-owned components live under `docs/agent/` (`skills/<name>/SKILL.md`, `commands/*.md`, `agents/*.md`, `rules/*.md`). Run `skillfit sync` to render them for each agent.\n",
+    "docs/agent/index.md": "# Agent context\n\nRead only the page relevant to the task:\n\n- `architecture.md`: structure, boundaries, and generated code\n- `design-system.md`: UI primitives, tokens, and visual conventions\n- `workflows.md`: package manager, checks, Git, PR, and release policy\n- `rules/*.md`: additional repository constraints, when relevant\n\nRepository-owned components live under `docs/agent/` (`skills/<name>/SKILL.md`, `commands/*.md`, `agents/*.md`, `rules/*.md`). Run `stackfit sync` to render them for each agent.\n",
     "docs/agent/architecture.md": "# Architecture\n\nDocument stable repository boundaries and where new code belongs. Link existing detailed docs instead of duplicating them.\n",
     "docs/agent/design-system.md": "# Design system\n\nDocument the canonical UI primitives, tokens, typography, and accessibility conventions. Remove this page for repositories without a UI.\n",
     "docs/agent/workflows.md": "# Workflows\n\nDocument the package manager, validation commands, generated files, branch/PR policy, and release automation.\n",
@@ -56,7 +56,7 @@ async function listFiles(root) {
 
 // A catalog is a plain folder you keep in your own (usually private) Git repository.
 export async function initCatalog(target, options) {
-  const root = expandHome(target ?? "~/.skillfit");
+  const root = expandHome(target ?? "~/.stackfit");
   const created = [];
   if (options.starter) {
     for (const source of await listFiles(STARTER_ROOT)) {
@@ -70,19 +70,19 @@ export async function initCatalog(target, options) {
     }
   } else {
     created.push(...await writeMissing(root, {
-      "skillfit.json": json({ $schema: "https://unpkg.com/skillfit/schemas/skillfit.schema.json", schemaVersion: 3, skills: [], packs: { core: { description: "Every repository.", always: true, skills: [] } }, adapters: { agents: [], commands: [], rules: [] } }),
+      "stackfit.json": json({ $schema: "https://unpkg.com/stackfit/schemas/stackfit.schema.json", schemaVersion: 3, skills: [], packs: { core: { description: "Every repository.", always: true, skills: [] } }, adapters: { agents: [], commands: [], rules: [] } }),
       "skill-sources.json": json({ schemaVersion: 2, skills: {} }),
-      "skillfit.local.example.json": json({ schemaVersion: 1, machines: [{ id: "laptop", match: { platform: "darwin" }, roots: ["~/code"] }] }),
-      ".env.example": "# Copy to .env (gitignored). Values here fill {{env:NAME}} placeholders in commands, rules, and agents.\n# SKILLFIT_CATALOG=~/path/to/this/catalog\n# GITHUB_TOKEN=\n",
-      ".gitignore": "skillfit.local.json\n.env\nskills/.*.refresh/\n.DS_Store\n",
+      "stackfit.local.example.json": json({ schemaVersion: 1, machines: [{ id: "laptop", match: { platform: "darwin" }, roots: ["~/code"] }] }),
+      ".env.example": "# Copy to .env (gitignored). Values here fill {{env:NAME}} placeholders in commands, rules, and agents.\n# STACKFIT_CATALOG=~/path/to/this/catalog\n# GITHUB_TOKEN=\n",
+      ".gitignore": "stackfit.local.json\n.env\nskills/.*.refresh/\n.DS_Store\n",
       "skills/.gitkeep": "",
     }, options));
   }
   console.log(`${options.dryRun ? "Would create" : "Created"} catalog at ${root} (${created.length} file(s)).`);
   if (!options.quiet) for (const key of created) console.log(`  create ${key}`);
   console.log(options.starter
-    ? "\nNext:\n  skillfit refresh --all      # vendor the starter's upstream skills\n  skillfit audit\n  skillfit report --root ~/code\n  skillfit sync --root ~/code"
-    : "\nNext: add skills under skills/<name>/SKILL.md, list them in skillfit.json and a pack, then `skillfit sync --project <repo>`.");
-  if (!root.endsWith(".skillfit")) console.log(`\nPoint skillfit at it with --catalog ${target}, SKILLFIT_CATALOG, or run commands from inside the folder.`);
+    ? "\nNext:\n  stackfit refresh --all      # vendor the starter's upstream skills\n  stackfit audit\n  stackfit report --root ~/code\n  stackfit sync --root ~/code"
+    : "\nNext: add skills under skills/<name>/SKILL.md, list them in stackfit.json and a pack, then `stackfit sync --project <repo>`.");
+  if (!root.endsWith(".stackfit")) console.log(`\nPoint stackfit at it with --catalog ${target}, STACKFIT_CATALOG, or run commands from inside the folder.`);
   return created.length;
 }

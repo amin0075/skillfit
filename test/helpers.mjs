@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 
 export const root = resolve(import.meta.dirname, "..");
-const cli = resolve(root, "bin/skillfit.mjs");
+const cli = resolve(root, "bin/stackfit.mjs");
 
 export function run(args, { catalog, env = {}, cwd = root } = {}) {
   return spawnSync(process.execPath, [cli, ...args], {
@@ -12,8 +12,8 @@ export function run(args, { catalog, env = {}, cwd = root } = {}) {
     encoding: "utf8",
     env: {
       ...process.env,
-      SKILLFIT_CATALOG: catalog ?? "",
-      SKILLFIT_LOCAL_CONFIG: "",
+      STACKFIT_CATALOG: catalog ?? "",
+      STACKFIT_LOCAL_CONFIG: "",
       ...env,
     },
   });
@@ -30,9 +30,9 @@ const skill = (name, description, extra = "") => `---\nname: ${name}\ndescriptio
 
 // A small catalog covering every feature: always/detected/opt-in packs, overrides, rules, commands, agents.
 export async function makeCatalog(overrides = {}) {
-  const catalog = await mkdtemp(resolve(tmpdir(), "skillfit-catalog-"));
+  const catalog = await mkdtemp(resolve(tmpdir(), "stackfit-catalog-"));
   await writeTree(catalog, {
-    "skillfit.json": {
+    "stackfit.json": {
       schemaVersion: 3,
       skills: ["base", "next-tips", "py-tips", "go-tips", "deep-research", "vendored", "workflow"],
       packs: {
@@ -81,7 +81,7 @@ export async function makeCatalog(overrides = {}) {
 }
 
 export async function makeProject(files = {}) {
-  const project = await mkdtemp(resolve(tmpdir(), "skillfit-project-"));
+  const project = await mkdtemp(resolve(tmpdir(), "stackfit-project-"));
   await mkdir(resolve(project, ".git"));
   await writeTree(project, files);
   return project;

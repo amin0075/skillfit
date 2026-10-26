@@ -1,5 +1,5 @@
 {
-  "$schema": "https://unpkg.com/skillfit/schemas/skillfit.schema.json",
+  "$schema": "https://unpkg.com/stackfit/schemas/stackfit.schema.json",
   "schemaVersion": 3,
   "skills": [
     "animation-vocabulary",

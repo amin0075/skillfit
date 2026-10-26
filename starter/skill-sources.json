@@ -1,5 +1,5 @@
 {
-  "$schema": "https://unpkg.com/skillfit/schemas/skill-sources.schema.json",
+  "$schema": "https://unpkg.com/stackfit/schemas/skill-sources.schema.json",
   "schemaVersion": 2,
   "skills": {
     "animation-vocabulary": {
@@ -169,12 +169,12 @@
     "next-server-security": {
       "kind": "custom",
       "reviewed": "2026-10-26",
-      "note": "First-party skillfit starter skill."
+      "note": "First-party stackfit starter skill."
     },
     "playwright-e2e-testing": {
       "kind": "custom",
       "reviewed": "2026-10-26",
-      "note": "First-party skillfit starter skill."
+      "note": "First-party stackfit starter skill."
     },
     "react-doctor": {
       "kind": "external",

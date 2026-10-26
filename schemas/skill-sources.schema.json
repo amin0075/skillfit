@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "skillfit skill provenance (skill-sources.json)",
+  "title": "stackfit skill provenance (skill-sources.json)",
   "type": "object",
   "required": [
     "schemaVersion",

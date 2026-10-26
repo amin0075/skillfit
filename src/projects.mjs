@@ -5,8 +5,8 @@ import { expandHome, loadJson } from "./catalog.mjs";
 
 export function currentMachineIdentity() {
   return {
-    platform: process.env.SKILLFIT_PLATFORM || platform(),
-    hostname: process.env.SKILLFIT_HOSTNAME || hostname(),
+    platform: process.env.STACKFIT_PLATFORM || platform(),
+    hostname: process.env.STACKFIT_HOSTNAME || hostname(),
   };
 }
 
@@ -19,9 +19,9 @@ function scoreMachineMatch(entry, identity) {
 
 export function resolveMachineProfile(localConfig, identity = currentMachineIdentity()) {
   if (!localConfig) return null;
-  if (localConfig.schemaVersion !== 1) throw new Error("Unsupported skillfit.local.json schemaVersion");
+  if (localConfig.schemaVersion !== 1) throw new Error("Unsupported stackfit.local.json schemaVersion");
   if (!Array.isArray(localConfig.machines) || !localConfig.machines.length) {
-    throw new Error("skillfit.local.json must declare at least one machine");
+    throw new Error("stackfit.local.json must declare at least one machine");
   }
   let best = null;
   let bestScore = -1;
@@ -34,7 +34,7 @@ export function resolveMachineProfile(localConfig, identity = currentMachineIden
   }
   if (!best) {
     throw new Error(
-      `No skillfit.local.json machine matches ${identity.platform} hostname=${identity.hostname}.`
+      `No stackfit.local.json machine matches ${identity.platform} hostname=${identity.hostname}.`
       + " Update the local file or pass --project/--root.",
     );
   }
@@ -59,7 +59,7 @@ function normalizeProjectEntry(entry) {
       selection: { packs: entry.packs, excludePacks: entry.excludePacks, skills: entry.skills },
     };
   }
-  throw new Error('Invalid projects entry in skillfit.local.json; use a string name or { "name": "...", "packs": [] }');
+  throw new Error('Invalid projects entry in stackfit.local.json; use a string name or { "name": "...", "packs": [] }');
 }
 
 function resolveNamedProjects(roots, entries) {
@@ -68,7 +68,7 @@ function resolveNamedProjects(roots, entries) {
     if (!matches.length) {
       throw new Error(
         `Configured project '${entry.name}' not found under machine roots: ${roots.join(", ")}.`
-        + " Remove it from skillfit.local.json or add the folder that holds it to roots.",
+        + " Remove it from stackfit.local.json or add the folder that holds it to roots.",
       );
     }
     if (matches.length > 1) throw new Error(`Configured project '${entry.name}' matches multiple roots: ${matches.join(", ")}`);
@@ -100,13 +100,13 @@ export function selectedProjects(catalog, options) {
     if (!projects.length) throw new Error(`No Git repositories directly under ${roots.join(", ")}`);
     return { projects: asTargets(projects) };
   }
-  if (!options.all) throw new Error("Choose --project <path>, --root <dir>, or --all (this machine's skillfit.local.json)");
+  if (!options.all) throw new Error("Choose --project <path>, --root <dir>, or --all (this machine's stackfit.local.json)");
   const machine = resolveMachineProfile(loadJson(catalog.localPath, null));
   if (!machine) return { projects: asTargets(discoverProjects(dirname(catalog.root), catalog.root)) };
   const roots = machine.roots.map((root) => expandHome(root, catalog.root));
   const missing = roots.filter((root) => !existsSync(root));
   if (missing.length) {
-    throw new Error(`Machine '${machine.id}' roots do not exist: ${missing.join(", ")}. Update skillfit.local.json for this machine.`);
+    throw new Error(`Machine '${machine.id}' roots do not exist: ${missing.join(", ")}. Update stackfit.local.json for this machine.`);
   }
   const identity = currentMachineIdentity();
   const resolvedMachine = { id: machine.id, platform: identity.platform, hostname: identity.hostname, roots };

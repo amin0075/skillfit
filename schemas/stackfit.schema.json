@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "skillfit catalog registry (skillfit.json)",
+  "title": "stackfit catalog registry (stackfit.json)",
   "type": "object",
   "required": [
     "schemaVersion",
@@ -106,5 +106,5 @@
     }
   },
   "additionalProperties": false,
-  "$id": "https://unpkg.com/skillfit/schemas/skillfit.schema.json"
+  "$id": "https://unpkg.com/stackfit/schemas/stackfit.schema.json"
 }

@@ -1,10 +1,10 @@
 {
-  "name": "skillfit",
+  "name": "stackfit",
   "version": "0.1.0",
   "description": "Give each repo only the AI agent skills that fit its stack. One catalog, every project, Claude Code + Cursor + Codex.",
   "type": "module",
   "bin": {
-    "skillfit": "./bin/skillfit.mjs"
+    "stackfit": "./bin/stackfit.mjs"
   },
   "files": [
     "bin",
@@ -18,8 +18,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test test/skillfit.test.mjs",
-    "check": "node --check bin/skillfit.mjs && node --test test/skillfit.test.mjs"
+    "test": "node --test test/stackfit.test.mjs",
+    "check": "node --check bin/stackfit.mjs && node --test test/stackfit.test.mjs"
   },
   "keywords": [
     "agent-skills",
@@ -37,8 +37,8 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/amin0075/skillfit.git"
+    "url": "git+https://github.com/amin0075/stackfit.git"
   },
-  "homepage": "https://github.com/amin0075/skillfit#readme",
-  "bugs": "https://github.com/amin0075/skillfit/issues"
+  "homepage": "https://github.com/amin0075/stackfit#readme",
+  "bugs": "https://github.com/amin0075/stackfit/issues"
 }

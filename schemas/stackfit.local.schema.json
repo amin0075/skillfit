@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "skillfit machine profiles (skillfit.local.json, gitignored)",
+  "title": "stackfit machine profiles (stackfit.local.json, gitignored)",
   "type": "object",
   "required": [
     "schemaVersion",

@@ -13,12 +13,12 @@ import { applyPlan, createPlan, git } from "../src/sync.mjs";
 
 const VERSION = JSON.parse(readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), "../package.json"), "utf8")).version;
 
-const HELP = `skillfit ${VERSION}: give each repo only the agent skills that fit its stack.
+const HELP = `stackfit ${VERSION}: give each repo only the agent skills that fit its stack.
 
-Usage: skillfit <command> [options]
+Usage: stackfit <command> [options]
 
 Commands:
-  catalog init [dir]    Create a catalog (default ~/.skillfit); --starter adds curated packs
+  catalog init [dir]    Create a catalog (default ~/.stackfit); --starter adds curated packs
   report                Show packs, skills, and always-loaded context per project
   status                Dry run of sync; --check exits 1 when anything would change (CI)
   sync                  Render the selected skills, rules, commands, and agents into projects
@@ -29,11 +29,11 @@ Commands:
 
 Project selection:
   --project <path>      One repository
-  --all                 This machine's projects from skillfit.local.json
+  --all                 This machine's projects from stackfit.local.json
   --root <dir>[,<dir>]  Every Git repository directly under these folders
 
 Options:
-  --catalog <dir>       Catalog folder (else SKILLFIT_CATALOG, the nearest skillfit.json, ~/.skillfit)
+  --catalog <dir>       Catalog folder (else STACKFIT_CATALOG, the nearest stackfit.json, ~/.stackfit)
   --dry-run             Report without writing
   --force               Take ownership of colliding unmanaged files
   --quiet               Summaries only
@@ -41,7 +41,7 @@ Options:
   --skip-pull           update without git pull
   --version, --help
 
-Docs: https://github.com/amin0075/skillfit`;
+Docs: https://github.com/amin0075/stackfit`;
 
 function parseArgs(argv) {
   const options = { positional: [] };
@@ -66,7 +66,7 @@ async function run(options) {
   const { command } = options;
 
   if (command === "catalog") {
-    if (options.args[0] !== "init") throw new Error("Usage: skillfit catalog init [dir] [--starter]");
+    if (options.args[0] !== "init") throw new Error("Usage: stackfit catalog init [dir] [--starter]");
     return initCatalog(options.args[1], options);
   }
 
@@ -79,7 +79,7 @@ async function run(options) {
     return;
   }
   if (command === "refresh") return refreshSkills(catalog, options);
-  if (!["status", "sync", "update", "init", "report"].includes(command)) throw new Error(`Unknown command '${command}'. Run skillfit --help.`);
+  if (!["status", "sync", "update", "init", "report"].includes(command)) throw new Error(`Unknown command '${command}'. Run stackfit --help.`);
 
   if (command === "update" && !options.skipPull) {
     if (git(["status", "--porcelain"], catalog.root).stdout.trim()) throw new Error("Catalog has local changes; commit or stash them before update");
@@ -119,6 +119,6 @@ async function run(options) {
 }
 
 run(parseArgs(process.argv.slice(2))).catch((error) => {
-  console.error(`skillfit: ${error.message}`);
+  console.error(`stackfit: ${error.message}`);
   process.exitCode = 1;
 });

@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping. skillfit has no runtime dependencies and needs Node 22+.
+Thanks for helping. stackfit has no runtime dependencies and needs Node 22+.
 
 ```bash
 npm test
@@ -8,7 +8,7 @@ npm test
 
 ## Layout
 
-- `bin/skillfit.mjs`: argument parsing and command dispatch.
+- `bin/stackfit.mjs`: argument parsing and command dispatch.
 - `src/catalog.mjs`: finding the catalog, `.env` loading, `{{env:NAME}}`.
 - `src/detect.mjs`: manifest readers and pack selection.
 - `src/render.mjs`: per-agent transforms (Cursor `.mdc` → Claude `paths:` rules, manual-only commands, agents).
