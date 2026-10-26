@@ -1,0 +1,20 @@
+{
+  "$schema": "https://unpkg.com/skillfit/schemas/skillfit.local.schema.json",
+  "schemaVersion": 1,
+  "machines": [
+    {
+      "id": "mac",
+      "match": { "platform": "darwin" },
+      "roots": ["~/code"],
+      "projects": [
+        "my-next-app",
+        { "name": "client-site", "scaffold": false, "packs": ["motion"] }
+      ]
+    },
+    {
+      "id": "windows",
+      "match": { "platform": "win32" },
+      "roots": ["C:/Users/you/code"]
+    }
+  ]
+}

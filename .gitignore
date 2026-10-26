@@ -1,0 +1,5 @@
+node_modules/
+.env
+*.tgz
+.DS_Store
+media/build/

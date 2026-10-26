@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "skillfit skill provenance (skill-sources.json)",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "skills"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "$comment": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": 2
+    },
+    "skills": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "kind"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "external",
+              "custom"
+            ],
+            "description": "external: vendored from upstream and refreshable. custom: owned in this catalog."
+          },
+          "source": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "repository",
+                  "path"
+                ],
+                "properties": {
+                  "repository": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            ]
+          },
+          "reviewed": {
+            "type": "string",
+            "format": "date",
+            "description": "Last date a human checked the skill is current and worth its context. audit warns after 180 days."
+          },
+          "note": {
+            "type": "string"
+          },
+          "render": {
+            "type": "object",
+            "description": "Sync-time overrides that survive refreshes.",
+            "properties": {
+              "frontmatter": {
+                "type": "object",
+                "description": "SKILL.md frontmatter keys to replace (null removes a key).",
+                "additionalProperties": {
+                  "type": [
+                    "string",
+                    "boolean",
+                    "number",
+                    "null"
+                  ]
+                }
+              },
+              "exclude": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Skill-relative files not synced into projects."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

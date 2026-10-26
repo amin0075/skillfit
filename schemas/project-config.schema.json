@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "skillfit project config (docs/agent/config.json)",
+  "type": "object",
+  "required": [
+    "schemaVersion"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "packs": {
+      "$ref": "#/$defs/componentNames",
+      "description": "Packs to include in addition to auto-detected ones (e.g. \"motion\" for CSS-only animation work, \"design-research\")."
+    },
+    "excludePacks": {
+      "$ref": "#/$defs/componentNames",
+      "description": "Auto-detected packs to skip. `core` cannot be excluded."
+    },
+    "detect": {
+      "type": "boolean",
+      "default": true,
+      "description": "Set false to use only `core` plus the packs listed explicitly."
+    },
+    "skills": {
+      "$ref": "#/$defs/componentNames",
+      "description": "Individual catalog skills to add without taking their whole pack."
+    },
+    "disabledSharedSkills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true,
+      "description": "Rare opt-out for a shared skill that is misleading in this repository. Applied last."
+    },
+    "overrides": {
+      "type": "object",
+      "description": "Explicit names of repo-owned components allowed to replace shared components.",
+      "properties": {
+        "skills": {
+          "$ref": "#/$defs/componentNames"
+        },
+        "agents": {
+          "$ref": "#/$defs/componentNames"
+        },
+        "commands": {
+          "$ref": "#/$defs/componentNames"
+        },
+        "rules": {
+          "$ref": "#/$defs/componentNames"
+        }
+      },
+      "additionalProperties": false
+    },
+    "$schema": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "componentNames": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

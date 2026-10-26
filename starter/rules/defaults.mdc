@@ -1,0 +1,11 @@
+---
+description: Starter defaults for any repository (edit or replace with your own)
+alwaysApply: true
+---
+
+# Defaults
+
+- Follow the repository's own instructions (`AGENTS.md`, `CLAUDE.md`, contributing docs) over these.
+- Match existing conventions, package manager, and scripts before introducing new ones.
+- Keep changes focused on the request and say which checks you ran.
+- Ask before running anything that changes external systems.

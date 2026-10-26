@@ -1,0 +1,19 @@
+{
+  "name": "skillfit",
+  "version": "0.1.0",
+  "description": "Give each repo only the AI agent skills that fit its stack. One catalog, every project, Claude Code + Cursor + Codex.",
+  "type": "module",
+  "bin": { "skillfit": "./bin/skillfit.mjs" },
+  "files": ["bin", "src", "schemas", "starter", "README.md", "LICENSE"],
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "check": "node --check bin/skillfit.mjs && node --test test/*.test.mjs"
+  },
+  "keywords": ["agent-skills", "claude-code", "cursor", "codex", "agents-md", "skills", "ai-agents", "context", "monorepo", "nextjs"],
+  "author": "Amin Keshavarzi (https://github.com/amin0075)",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/amin0075/skillfit.git" },
+  "homepage": "https://github.com/amin0075/skillfit#readme",
+  "bugs": "https://github.com/amin0075/skillfit/issues"
+}

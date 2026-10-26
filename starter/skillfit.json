@@ -1,0 +1,169 @@
+{
+  "$schema": "https://unpkg.com/skillfit/schemas/skillfit.schema.json",
+  "schemaVersion": 3,
+  "skills": [
+    "animation-vocabulary",
+    "apple-design",
+    "baseline-ui",
+    "emil-design-eng",
+    "fixing-accessibility",
+    "fixing-motion-performance",
+    "frontend-design",
+    "grilling",
+    "improve",
+    "improve-animations",
+    "interface-design",
+    "make-interfaces-feel-better",
+    "next-bundle-optimizer",
+    "next-cache-components-adoption",
+    "next-cache-components-optimizer",
+    "next-dev-loop",
+    "next-partial-prefetching-adoption",
+    "next-partial-prefetching-optimizer",
+    "next-server-security",
+    "playwright-e2e-testing",
+    "react-doctor",
+    "review-animations",
+    "shadcn",
+    "stripe-best-practices",
+    "stripe-projects",
+    "ui-ux-pro-max",
+    "upgrade-stripe",
+    "vercel-composition-patterns",
+    "vercel-react-best-practices",
+    "vercel-react-view-transitions",
+    "web-design-guidelines"
+  ],
+  "packs": {
+    "core": {
+      "description": "Every repository: codebase review planning and decision grilling.",
+      "always": true,
+      "skills": [
+        "grilling",
+        "improve"
+      ]
+    },
+    "react": {
+      "description": "React performance, composition, and diagnostics.",
+      "detect": {
+        "dependencies": [
+          "react"
+        ]
+      },
+      "skills": [
+        "react-doctor",
+        "vercel-composition-patterns",
+        "vercel-react-best-practices"
+      ]
+    },
+    "nextjs": {
+      "description": "Next.js App Router: server security, runtime verification, bundle and navigation workflows (manual-only ones cost no context). Framework reference knowledge comes from node_modules/next/dist/docs (16.2+).",
+      "detect": {
+        "dependencies": [
+          "next"
+        ]
+      },
+      "skills": [
+        "next-bundle-optimizer",
+        "next-cache-components-adoption",
+        "next-cache-components-optimizer",
+        "next-dev-loop",
+        "next-partial-prefetching-adoption",
+        "next-partial-prefetching-optimizer",
+        "next-server-security",
+        "vercel-react-view-transitions"
+      ]
+    },
+    "e2e": {
+      "description": "Playwright browser tests.",
+      "detect": {
+        "dependencies": [
+          "@playwright/test",
+          "playwright"
+        ]
+      },
+      "skills": [
+        "playwright-e2e-testing"
+      ]
+    },
+    "ui": {
+      "description": "Interface design, accessibility, and polish.",
+      "detect": {
+        "dependencies": [
+          "react-dom",
+          "vue",
+          "svelte",
+          "tailwindcss",
+          "@angular/core",
+          "solid-js"
+        ]
+      },
+      "skills": [
+        "baseline-ui",
+        "fixing-accessibility",
+        "frontend-design",
+        "interface-design",
+        "make-interfaces-feel-better",
+        "web-design-guidelines"
+      ]
+    },
+    "shadcn": {
+      "description": "shadcn/ui components and registries.",
+      "detect": {
+        "files": [
+          "components.json"
+        ]
+      },
+      "skills": [
+        "shadcn"
+      ]
+    },
+    "motion": {
+      "description": "Animation craft, review, and performance. Auto-detected from motion libraries; add it by hand for CSS-only motion work.",
+      "detect": {
+        "dependencies": [
+          "motion",
+          "framer-motion",
+          "gsap",
+          "@react-spring/web"
+        ]
+      },
+      "skills": [
+        "animation-vocabulary",
+        "apple-design",
+        "emil-design-eng",
+        "fixing-motion-performance",
+        "improve-animations",
+        "review-animations"
+      ]
+    },
+    "design-research": {
+      "description": "Large searchable UI/UX database (about 1.7 MB). Opt-in only.",
+      "skills": [
+        "ui-ux-pro-max"
+      ]
+    },
+    "stripe": {
+      "description": "Stripe integrations and upgrades.",
+      "detect": {
+        "dependencies": [
+          "stripe",
+          "@stripe/stripe-js",
+          "@stripe/react-stripe-js"
+        ]
+      },
+      "skills": [
+        "stripe-best-practices",
+        "stripe-projects",
+        "upgrade-stripe"
+      ]
+    }
+  },
+  "adapters": {
+    "agents": [],
+    "commands": [],
+    "rules": [
+      "defaults.mdc"
+    ]
+  }
+}

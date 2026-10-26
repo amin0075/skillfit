@@ -1,0 +1,4 @@
+skillfit.local.json
+.env
+skills/.*.refresh/
+.DS_Store

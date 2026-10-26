@@ -1,0 +1,310 @@
+{
+  "$schema": "https://unpkg.com/skillfit/schemas/skill-sources.schema.json",
+  "schemaVersion": 2,
+  "skills": {
+    "animation-vocabulary": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/emilkowalski/skills.git",
+        "path": "skills/animation-vocabulary"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "apple-design": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/emilkowalski/skills.git",
+        "path": "skills/apple-design"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "baseline-ui": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/ibelick/ui-skills.git",
+        "path": "skills/baseline-ui"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "emil-design-eng": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/emilkowalski/skills.git",
+        "path": "skills/emil-design-eng"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "fixing-accessibility": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/ibelick/ui-skills.git",
+        "path": "skills/fixing-accessibility"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "fixing-motion-performance": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/ibelick/ui-skills.git",
+        "path": "skills/fixing-motion-performance"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "frontend-design": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/anthropics/skills.git",
+        "path": "skills/frontend-design"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "grilling": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/mattpocock/skills.git",
+        "path": "skills/productivity/grilling"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "improve": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/shadcn/improve.git",
+        "path": "skills/improve"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "improve-animations": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/emilkowalski/skills.git",
+        "path": "skills/improve-animations"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "interface-design": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/Dammyjay93/interface-design.git",
+        "path": ".claude/skills/interface-design"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "make-interfaces-feel-better": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/jakubkrehel/make-interfaces-feel-better.git",
+        "path": "skills/make-interfaces-feel-better"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "next-bundle-optimizer": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/vercel/next.js.git",
+        "path": "skills/next-bundle-optimizer"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "next-cache-components-adoption": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/vercel/next.js.git",
+        "path": "skills/next-cache-components-adoption"
+      },
+      "reviewed": "2026-10-26",
+      "render": {
+        "frontmatter": {
+          "disable-model-invocation": true
+        }
+      }
+    },
+    "next-cache-components-optimizer": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/vercel/next.js.git",
+        "path": "skills/next-cache-components-optimizer"
+      },
+      "reviewed": "2026-10-26",
+      "render": {
+        "frontmatter": {
+          "disable-model-invocation": true
+        }
+      }
+    },
+    "next-dev-loop": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/vercel/next.js.git",
+        "path": "skills/next-dev-loop"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "next-partial-prefetching-adoption": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/vercel/next.js.git",
+        "path": "skills/next-partial-prefetching-adoption"
+      },
+      "reviewed": "2026-10-26",
+      "render": {
+        "frontmatter": {
+          "disable-model-invocation": true
+        }
+      }
+    },
+    "next-partial-prefetching-optimizer": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/vercel/next.js.git",
+        "path": "skills/next-partial-prefetching-optimizer"
+      },
+      "reviewed": "2026-10-26",
+      "render": {
+        "frontmatter": {
+          "disable-model-invocation": true
+        }
+      }
+    },
+    "next-server-security": {
+      "kind": "custom",
+      "reviewed": "2026-10-26",
+      "note": "First-party skillfit starter skill."
+    },
+    "playwright-e2e-testing": {
+      "kind": "custom",
+      "reviewed": "2026-10-26",
+      "note": "First-party skillfit starter skill."
+    },
+    "react-doctor": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/millionco/react-doctor.git",
+        "path": "skills/react-doctor"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "review-animations": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/emilkowalski/skills.git",
+        "path": "skills/review-animations"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "shadcn": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/shadcn-ui/ui.git",
+        "path": "skills/shadcn"
+      },
+      "reviewed": "2026-10-26",
+      "render": {
+        "exclude": [
+          "evals/evals.json"
+        ]
+      }
+    },
+    "stripe-best-practices": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/stripe/ai.git",
+        "path": "skills/stripe-best-practices"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "stripe-projects": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/stripe/ai.git",
+        "path": "skills/stripe-projects"
+      },
+      "reviewed": "2026-10-26",
+      "render": {
+        "frontmatter": {
+          "disable-model-invocation": true
+        }
+      }
+    },
+    "ui-ux-pro-max": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git",
+        "path": ".claude/skills/ui-ux-pro-max"
+      },
+      "reviewed": "2026-10-26"
+    },
+    "upgrade-stripe": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/stripe/ai.git",
+        "path": "skills/upgrade-stripe"
+      },
+      "reviewed": "2026-10-26",
+      "render": {
+        "frontmatter": {
+          "disable-model-invocation": true
+        }
+      }
+    },
+    "vercel-composition-patterns": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/vercel-labs/agent-skills.git",
+        "path": "skills/composition-patterns"
+      },
+      "reviewed": "2026-10-26",
+      "render": {
+        "exclude": [
+          "AGENTS.md",
+          "README.md",
+          "metadata.json"
+        ]
+      }
+    },
+    "vercel-react-best-practices": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/vercel-labs/agent-skills.git",
+        "path": "skills/react-best-practices"
+      },
+      "reviewed": "2026-10-26",
+      "render": {
+        "exclude": [
+          "AGENTS.md",
+          "README.md",
+          "metadata.json"
+        ]
+      }
+    },
+    "vercel-react-view-transitions": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/vercel-labs/agent-skills.git",
+        "path": "skills/react-view-transitions"
+      },
+      "reviewed": "2026-10-26",
+      "render": {
+        "exclude": [
+          "AGENTS.md",
+          "README.md",
+          "metadata.json"
+        ],
+        "frontmatter": {
+          "disable-model-invocation": true
+        }
+      }
+    },
+    "web-design-guidelines": {
+      "kind": "external",
+      "source": {
+        "repository": "https://github.com/vercel-labs/agent-skills.git",
+        "path": "skills/web-design-guidelines"
+      },
+      "reviewed": "2026-10-26",
+      "render": {
+        "exclude": []
+      }
+    }
+  }
+}

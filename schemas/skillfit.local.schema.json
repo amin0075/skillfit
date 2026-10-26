@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "skillfit machine profiles (skillfit.local.json, gitignored)",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "machines"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "machines": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "match",
+          "roots"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Label printed when this machine profile is selected."
+          },
+          "match": {
+            "type": "object",
+            "required": [
+              "platform"
+            ],
+            "properties": {
+              "platform": {
+                "type": "string",
+                "enum": [
+                  "win32",
+                  "darwin",
+                  "linux"
+                ],
+                "description": "Node.js process.platform value."
+              },
+              "hostname": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Optional exact hostname match (os.hostname())."
+              }
+            },
+            "additionalProperties": false
+          },
+          "roots": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Absolute or ~-relative directories containing Git projects to sync with --all."
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/projectEntry"
+            },
+            "description": "Optional projects to sync under roots. Omit to sync every Git repo in roots. Use { name, scaffold: false } for adapter-only local sync without docs/agent scaffolding."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "$schema": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "projectEntry": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "object",
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "scaffold": {
+              "type": "boolean",
+              "default": true,
+              "description": "When false, sync shared skills/adapters only and keep CLAUDE.md + docs/agent/ local-gitignored. init is skipped."
+            },
+            "packs": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true,
+              "description": "Extra packs for this project on this machine. Useful for scaffold:false repos whose docs/agent/config.json is not read."
+            },
+            "excludePacks": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true,
+              "description": "Auto-detected packs to skip for this project on this machine."
+            },
+            "skills": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "uniqueItems": true,
+              "description": "Individual catalog skills to add for this project on this machine."
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

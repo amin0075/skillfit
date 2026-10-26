@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "skillfit catalog registry (skillfit.json)",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "skills",
+    "packs"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 3
+    },
+    "projectConfigPath": {
+      "type": "string",
+      "description": "Where projects keep their config. Default docs/agent/config.json."
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true,
+      "description": "Enabled catalog. A skill reaches a project only through a pack or an explicit project `skills` entry."
+    },
+    "packs": {
+      "type": "object",
+      "description": "Named skill groups. `always` packs go to every project; `detect` packs are auto-selected from package.json dependencies or root/subfolder files; packs with neither are opt-in only.",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "skills"
+        ],
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "always": {
+            "type": "boolean"
+          },
+          "detect": {
+            "type": "object",
+            "properties": {
+              "dependencies": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "files": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              }
+            },
+            "additionalProperties": false
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "adapters": {
+      "type": "object",
+      "required": [
+        "agents",
+        "commands",
+        "rules"
+      ],
+      "properties": {
+        "agents": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "$schema": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "$id": "https://unpkg.com/skillfit/schemas/skillfit.schema.json"
+}
