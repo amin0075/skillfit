@@ -63,7 +63,7 @@ export function resolveCatalog(explicit) {
     throw new Error(
       tried
         ? `No ${REGISTRY_FILE} in ${expandHome(tried)}`
-        : `No catalog found. Run \`stackfit catalog init <dir> --starter\`, or set STACKFIT_CATALOG / --catalog.`,
+        : `No catalog found. Create one with \`stackfit catalog init\` (your own skills) or \`stackfit catalog init --starter\` (curated packs), or point to one with STACKFIT_CATALOG / --catalog.`,
     );
   }
   loadEnvFile(resolve(root, ".env"));

@@ -7,7 +7,7 @@ import { loadRegistry, resolveCatalog } from "../src/catalog.mjs";
 import { auditCatalog, printAudit } from "../src/audit.mjs";
 import { selectedProjects } from "../src/projects.mjs";
 import { refreshSkills } from "../src/refresh.mjs";
-import { printReport, projectReport, skillCosts } from "../src/report.mjs";
+import { globalSkills, printReport, projectReport, skillCosts } from "../src/report.mjs";
 import { initCatalog, initProject } from "../src/scaffold.mjs";
 import { applyPlan, createPlan, git } from "../src/sync.mjs";
 
@@ -19,7 +19,7 @@ Usage: stackfit <command> [options]
 
 Commands:
   catalog init [dir]    Create a catalog (default ~/.stackfit); --starter adds curated packs
-  report                Show packs, skills, and always-loaded context per project
+  report                Per project: packs, skills, always-loaded tokens; plus global skills
   status                Dry run of sync; --check exits 1 when anything would change (CI)
   sync                  Render the selected skills, rules, commands, and agents into projects
   update                git pull --ff-only the catalog, then sync
@@ -97,8 +97,9 @@ async function run(options) {
   const registry = loadRegistry(catalog);
   if (command === "report") {
     const costs = skillCosts(catalog, registry);
-    const rows = projects.map((project) => projectReport(catalog, registry, project, costs));
-    return options.json ? console.log(JSON.stringify(rows, null, 2)) : printReport(rows);
+    const result = { projects: [], global: globalSkills() };
+    for (const project of projects) result.projects.push(await projectReport(catalog, registry, project, costs));
+    return options.json ? console.log(JSON.stringify(result, null, 2)) : printReport(result);
   }
 
   if (command === "status") options.dryRun = true;

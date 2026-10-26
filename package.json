@@ -1,18 +1,19 @@
 {
   "name": "stackfit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Give each repo only the AI agent skills that fit its stack. One catalog, every project, Claude Code + Cursor + Codex.",
   "type": "module",
   "bin": {
     "stackfit": "./bin/stackfit.mjs"
   },
   "files": [
-    "bin",
-    "src",
-    "schemas",
-    "starter",
+    "CHANGELOG.md",
+    "LICENSE",
     "README.md",
-    "LICENSE"
+    "bin",
+    "schemas",
+    "src",
+    "starter"
   ],
   "engines": {
     "node": ">=22"

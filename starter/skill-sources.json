@@ -205,6 +205,11 @@
         ]
       }
     },
+    "stackfit": {
+      "kind": "custom",
+      "reviewed": "2026-10-26",
+      "note": "First-party stackfit starter skill. Kept in sync with skills/stackfit in the stackfit repository."
+    },
     "stripe-best-practices": {
       "kind": "external",
       "source": {

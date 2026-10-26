@@ -81,8 +81,8 @@ export async function initCatalog(target, options) {
   console.log(`${options.dryRun ? "Would create" : "Created"} catalog at ${root} (${created.length} file(s)).`);
   if (!options.quiet) for (const key of created) console.log(`  create ${key}`);
   console.log(options.starter
-    ? "\nNext:\n  stackfit refresh --all      # vendor the starter's upstream skills\n  stackfit audit\n  stackfit report --root ~/code\n  stackfit sync --root ~/code"
-    : "\nNext: add skills under skills/<name>/SKILL.md, list them in stackfit.json and a pack, then `stackfit sync --project <repo>`.");
+    ? "\nNext:\n  stackfit refresh --all      # vendor the starter's upstream skills\n  stackfit audit\n  stackfit report --root ~/code   # what each repo would load\n  stackfit status --root ~/code   # dry run\n  stackfit sync --root ~/code"
+    : "\nNext: add skills under skills/<name>/SKILL.md, list them in stackfit.json and a pack, record them in skill-sources.json, then:\n  stackfit audit\n  stackfit report --root ~/code\n  stackfit status --root ~/code   # dry run\n  stackfit sync --root ~/code");
   if (!root.endsWith(".stackfit")) console.log(`\nPoint stackfit at it with --catalog ${target}, STACKFIT_CATALOG, or run commands from inside the folder.`);
   return created.length;
 }

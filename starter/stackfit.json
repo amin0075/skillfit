@@ -25,6 +25,7 @@
     "react-doctor",
     "review-animations",
     "shadcn",
+    "stackfit",
     "stripe-best-practices",
     "stripe-projects",
     "ui-ux-pro-max",
@@ -36,11 +37,12 @@
   ],
   "packs": {
     "core": {
-      "description": "Every repository: codebase review planning and decision grilling.",
+      "description": "Every repository: managing this catalog, codebase review planning, decision grilling.",
       "always": true,
       "skills": [
         "grilling",
-        "improve"
+        "improve",
+        "stackfit"
       ]
     },
     "react": {

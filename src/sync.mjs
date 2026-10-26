@@ -11,8 +11,12 @@ import { claudeAgent, claudeCommand, claudeRule, cursorRule, setFrontmatter } fr
 export const LOCK_NAME = ".stackfit.lock.json";
 // Older names of the lock, from before the tool was called stackfit; read once, then replaced.
 const LEGACY_LOCK_NAMES = [".skillfit.lock.json", ".agent-config.lock.json"];
-const LOCAL_EXCLUDES = [LOCK_NAME, ".agents/", ".cursor/", ".claude/"];
-const LOCAL_SCAFFOLD_EXCLUDES = ["CLAUDE.md", "docs/agent/"];
+const LOCAL_SCAFFOLD_EXCLUDES = ["/CLAUDE.md", "/docs/agent/"];
+const EXCLUDE_BEGIN = "# >>> stackfit: generated files (managed, do not edit)";
+const EXCLUDE_END = "# <<< stackfit";
+// Lines written by older versions, which excluded whole .claude/ and .cursor/ folders.
+const LEGACY_HEADER = /^# Managed locally by (agent-config|skillfit|stackfit)$/;
+const LEGACY_LINES = new Set([".agent-config.lock.json", ".skillfit.lock.json", ".stackfit.lock.json", ".agents/", ".cursor/", ".claude/", "CLAUDE.md", "docs/agent/"]);
 
 export function lstatMaybe(path) {
   try {
@@ -170,17 +174,34 @@ export async function createPlan(catalog, projectPath, registry, { scaffold = tr
   return { plan, links, projectName, scaffold, packs: selection.packs, skills: selection.skills, configPath: scaffold ? relative(projectPath, configPath) : null };
 }
 
-async function ensureLocalGitExclude(projectPath, { scaffold = true } = {}) {
+// Git-exclude exactly what stackfit generates, so a user's own files in .claude/ or .cursor/
+// (settings.json, personal commands) stay visible to git.
+async function ensureLocalGitExclude(projectPath, generatedKeys, { scaffold = true } = {}) {
   const gitPath = git(["rev-parse", "--git-path", "info/exclude"], projectPath);
   const excludePath = gitPath.status === 0 ? resolve(projectPath, gitPath.stdout.trim()) : resolve(projectPath, ".git/info/exclude");
   const existing = existsSync(excludePath) ? await readFile(excludePath, "utf8") : "";
-  const lines = new Set(existing.split(/\r?\n/));
-  const wanted = scaffold ? LOCAL_EXCLUDES : [...LOCAL_EXCLUDES, ...LOCAL_SCAFFOLD_EXCLUDES];
-  const additions = wanted.filter((entry) => !lines.has(entry));
-  if (!additions.length) return;
+  const kept = [];
+  let inBlock = false;
+  let inLegacy = false;
+  for (const line of existing.split(/\r?\n/)) {
+    if (line === EXCLUDE_BEGIN) { inBlock = true; continue; }
+    if (inBlock) { if (line === EXCLUDE_END) inBlock = false; continue; }
+    if (LEGACY_HEADER.test(line)) { inLegacy = true; continue; }
+    if (inLegacy && LEGACY_LINES.has(line)) continue;
+    inLegacy = false;
+    kept.push(line);
+  }
+  while (kept.length && kept[kept.length - 1] === "") kept.pop();
+  const entries = [
+    `/${LOCK_NAME}`,
+    "/.agents/",
+    ...generatedKeys.filter((key) => !key.startsWith(".agents/")).map((key) => `/${key}`).sort(),
+    ...(scaffold ? [] : LOCAL_SCAFFOLD_EXCLUDES),
+  ];
+  const next = `${kept.length ? `${kept.join("\n")}\n` : ""}${EXCLUDE_BEGIN}\n${[...new Set(entries)].join("\n")}\n${EXCLUDE_END}\n`;
+  if (next === existing) return;
   await mkdir(dirname(excludePath), { recursive: true });
-  const prefix = existing && !existing.endsWith("\n") ? "\n" : "";
-  await writeFile(excludePath, `${existing}${prefix}# Managed locally by stackfit\n${additions.join("\n")}\n`);
+  await writeFile(excludePath, next);
 }
 
 // After removing a dropped skill's files, remove its now-empty folders (never the project root).
@@ -249,7 +270,7 @@ export async function applyPlan(catalog, projectPath, planData, options) {
   }
 
   if (!options.dryRun) {
-    await ensureLocalGitExclude(projectPath, { scaffold: planData.scaffold !== false });
+    await ensureLocalGitExclude(projectPath, [...Object.keys(nextFiles), ...Object.keys(nextLinks)], { scaffold: planData.scaffold !== false });
     for (const action of actions.filter((item) => item.type === "delete")) {
       await rm(action.destination, { recursive: true, force: true });
       await pruneEmptyParents(projectPath, dirname(action.destination));

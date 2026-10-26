@@ -9,9 +9,19 @@ stackfit keeps one catalog of agent skills, rules, commands, and subagents, and 
 ```bash
 npx stackfit catalog init --starter   # a catalog in ~/.stackfit with curated packs
 npx stackfit refresh --all            # vendor the upstream skills (Vercel, shadcn, Stripe, ...)
-npx stackfit report --root ~/code     # what each repo would load, and what you save
+npx stackfit report --root ~/code     # what each repo would load, next to what your global skills cost today
 npx stackfit sync --root ~/code       # write it
 ```
+
+### Or let your agent do it
+
+stackfit ships an agent skill that knows every command, recipe, and error message:
+
+```bash
+npx skills add amin0075/stackfit      # or copy skills/stackfit into ~/.claude/skills
+```
+
+Then ask your agent: *"Set up stackfit for my repos in ~/code and tell me honestly what it saves."* It measures your current global skills first, previews before writing, and never forces over your own files. The starter catalog includes the same skill.
 
 ## Why
 
@@ -21,23 +31,28 @@ stackfit treats agent context like a dependency:
 
 - **Packs, detected per repo.** Skills belong to packs. A pack is selected when the repo's manifests mention a dependency or contain a file: `package.json`, `requirements.txt`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `composer.json`, at the root and in subfolders like `web/`, `apps/*`, `packages/*`.
 - **One catalog, every repo.** Machine profiles list your project folders on each computer (Mac at home, Windows at work). `stackfit update --all` pulls the catalog and syncs them all.
-- **Measured.** `stackfit report` shows the always-loaded cost per repo; `stackfit audit` flags stale, unsourced, and oversized skills.
+- **Measured, honestly.** `stackfit report` shows what each repo loads every session (skill listings + always-on rules) next to what your global skill folders already cost everywhere; `stackfit audit` flags stale, unsourced, and oversized skills.
 - **Upstream skills without losing your edits.** Vendor skills from GitHub with `refresh`; shorten a description, make a skill manual-only, or drop files with `render` overrides that survive every refresh.
 - **Native for each agent.** Claude Code gets `.claude/skills`, `.claude/rules` (glob rules become `paths:`), manual-only commands, and subagents. Cursor gets `.cursor/skills`, `.mdc` rules, commands, and agents. Codex reads `.agents/skills`. One physical copy, symlinked (junctions on Windows, no admin needed).
-- **Safe.** Generated files are tracked in a lock and excluded from Git locally. stackfit never overwrites a file it did not create, and never touches files your repo owns.
+- **Safe.** Generated files are tracked in a lock and only those exact files are excluded from Git locally (your own `.claude/settings.json` stays visible). stackfit never overwrites a file it did not create, and never touches files your repo owns.
 
 ## Example
 
-```text
-$ stackfit report --root ~/code      # the starter catalog, four sample repos
-project         skills  always-loaded  vs. everything  packs
-ingest-worker     2/31       ~168 tok            -92%  core
-marketing-site   25/31      ~1.5k tok            -27%  core, react, nextjs, ui, motion
-payments-api      5/31       ~397 tok            -81%  core, stripe
-storefront       24/31      ~1.5k tok            -27%  core, react, nextjs, e2e, ui, shadcn, stripe
+The starter catalog, four sample repos, and 31 skills installed globally the usual way:
 
-4 projects load ~3.6k tokens of skill listings in total, instead of ~8.4k if every skill went everywhere (-57%).
+```text
+$ stackfit report --root ~/code
+project         skills  skill listings     rules  per session  packs
+ingest-worker        2        ~168 tok   ~83 tok     ~251 tok  core
+marketing-site      25       ~1.5k tok   ~83 tok    ~1.6k tok  core, react, nextjs, ui, motion
+payments-api         5        ~397 tok   ~83 tok     ~480 tok  core, stripe
+storefront          24       ~1.5k tok   ~83 tok    ~1.6k tok  core, react, nextjs, e2e, ui, shadcn, stripe
+
+With stackfit: ~4.0k tokens across 4 project(s). Every catalog skill in every repo would be ~8.7k.
+Global skills add ~3.0k tokens to every session in every repo, with or without stackfit: ~/.claude/skills (31).
 ```
+
+Read it honestly: the saving comes from moving skills out of global folders and letting each repo take only its packs. The Go worker drops from ~3.0k to ~251 tokens; a Next.js app that needs most packs saves little. If you only had a handful of global skills, start from an empty catalog with just those (`stackfit catalog init`) rather than the starter, or the starter's extra packs can add context instead of removing it. `report` always shows both numbers, so you can tell.
 
 ## How it works
 
@@ -122,7 +137,7 @@ Commands, rules, and agents can contain `{{env:NAME}}`. stackfit fills them at s
 | Command | What it does |
 | --- | --- |
 | `stackfit catalog init [dir] [--starter]` | Create a catalog (default `~/.stackfit`) |
-| `stackfit report` | Packs, skills, and always-loaded context per project (`--json`) |
+| `stackfit report` | Per project: packs, skills, skill-listing and rule tokens; plus your global skill folders as a baseline (`--json`) |
 | `stackfit status` | Dry run of sync; `--check` exits 1 on drift (CI) |
 | `stackfit sync` | Render the selected skills, rules, commands, and agents |
 | `stackfit update` | `git pull --ff-only` the catalog, then sync |

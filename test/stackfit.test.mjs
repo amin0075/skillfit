@@ -207,7 +207,7 @@ test("report shows context per project and status --check fails on drift", async
   try {
     const report = run(["report", "--project", project, "--json"], { catalog });
     assert.equal(report.status, 0, report.stderr);
-    const [row] = JSON.parse(report.stdout);
+    const [row] = JSON.parse(report.stdout).projects;
     assert.deepEqual(row.packs, ["core", "nextjs"]);
     assert.equal(row.skills, 4);
     assert.ok(row.tokens < row.tokensIfEverything);
@@ -218,7 +218,7 @@ test("report shows context per project and status --check fails on drift", async
 
     const byRoot = run(["report", "--root", resolve(project, "..")], { catalog });
     assert.equal(byRoot.status, 0, byRoot.stderr);
-    assert.match(byRoot.stdout, /always-loaded/);
+    assert.match(byRoot.stdout, /per session/);
   } finally {
     await rm(project, { recursive: true, force: true });
     await rm(catalog, { recursive: true, force: true });
@@ -294,5 +294,74 @@ test("projects synced by the old skillfit name migrate their lock", async () => 
   } finally {
     await rm(project, { recursive: true, force: true });
     await rm(catalog, { recursive: true, force: true });
+  }
+});
+
+test("git exclude covers only generated files, so the user's own .claude files stay visible", async () => {
+  const { spawnSync } = await import("node:child_process");
+  const catalog = await makeCatalog();
+  const project = await makeProject();
+  await rm(resolve(project, ".git"), { recursive: true, force: true });
+  spawnSync("git", ["init", "-q", project]);
+  await writeTree(project, {
+    ".git/info/exclude": "# my own ignore\n*.log\n# Managed locally by agent-config\n.agent-config.lock.json\n.agents/\n.cursor/\n.claude/\n",
+  });
+  const ignored = (path) => spawnSync("git", ["-C", project, "check-ignore", "-q", path]).status === 0;
+  try {
+    const result = run(["sync", "--project", project], { catalog });
+    assert.equal(result.status, 0, result.stderr);
+    const exclude = await read(resolve(project, ".git/info/exclude"));
+    assert.match(exclude, /\*\.log/, "user lines are kept");
+    assert.doesNotMatch(exclude, /^\.claude\/$/m, "legacy whole-folder lines are removed");
+    assert.doesNotMatch(exclude, /Managed locally by/);
+
+    await writeTree(project, { ".claude/settings.json": "{}\n" });
+    assert.equal(ignored(".claude/settings.json"), false, "user's own file is visible to git");
+    assert.equal(ignored(".claude/rules/general.md"), true);
+    assert.equal(ignored(".claude/skills"), true);
+    assert.equal(ignored(".agents/skills/base/SKILL.md"), true);
+    assert.equal(ignored(".stackfit.lock.json"), true);
+
+    const again = run(["sync", "--project", project], { catalog });
+    assert.equal(again.status, 0, again.stderr);
+    assert.equal(await read(resolve(project, ".git/info/exclude")), exclude, "the managed block is stable");
+  } finally {
+    await rm(project, { recursive: true, force: true });
+    await rm(catalog, { recursive: true, force: true });
+  }
+});
+
+test("report counts always-on rules and shows global skills as a baseline", async () => {
+  const catalog = await makeCatalog();
+  const project = await makeProject();
+  const home = await makeProject({
+    ".claude/skills/old-global/SKILL.md": "---\nname: old-global\ndescription: A global skill that loads in every repo.\n---\n",
+    ".claude/skills/not-a-skill/notes.txt": "ignored\n",
+  });
+  try {
+    const env = { HOME: home, USERPROFILE: home };
+    const result = run(["report", "--project", project, "--json"], { catalog, env });
+    assert.equal(result.status, 0, result.stderr);
+    const { projects: [row], global } = JSON.parse(result.stdout);
+    assert.ok(row.ruleTokens > 0, "alwaysApply rule is counted");
+    assert.equal(row.tokens, row.listingTokens + row.ruleTokens);
+    assert.equal(row.skills, 2);
+    assert.deepEqual(global.folders.map((folder) => [folder.path, folder.skills]), [["~/.claude/skills", 1]]);
+    assert.ok(global.tokens > 0);
+    const text = run(["report", "--project", project], { catalog, env });
+    assert.match(text.stdout, /Global skills add ~\d+ tokens to every session/);
+  } finally {
+    for (const path of [project, catalog, home]) await rm(path, { recursive: true, force: true });
+  }
+});
+
+test("the starter ships the same stackfit skill as skills/stackfit", async () => {
+  const { readdir } = await import("node:fs/promises");
+  const list = async (dir) => (await readdir(dir, { recursive: true })).sort();
+  const a = resolve(import.meta.dirname, "../skills/stackfit");
+  const b = resolve(import.meta.dirname, "../starter/skills/stackfit");
+  assert.deepEqual(await list(b), await list(a));
+  for (const file of await list(a)) {
+    if (file.endsWith(".md")) assert.equal(await read(resolve(b, file)), await read(resolve(a, file)), file);
   }
 });
