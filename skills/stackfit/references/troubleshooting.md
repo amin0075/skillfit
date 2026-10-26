@@ -4,7 +4,7 @@ Messages are printed as `stackfit: <message>` and exit with code 1.
 
 | Message (start) | Cause | Fix |
 | --- | --- | --- |
-| `No catalog found` | No `--catalog`, no `STACKFIT_CATALOG`, no `stackfit.json` above the current folder, no `~/.stackfit` | `npx stackfit catalog init --starter`, or point at an existing catalog |
+| `No catalog found` | No `--catalog`, no `STACKFIT_CATALOG`, no `stackfit.json` above the current folder, no `~/.stackfit` | Expected on a first run. `npx stackfit catalog init` (own skills) or `--starter` (curated packs), or point at an existing catalog |
 | `<repo>: unmanaged collision at <path>` / `under <path>` | A file stackfit did not create sits where it would write | Show the file to the user. Move it into the catalog or `docs/agent/` (recipes.md, recipe 3) and remove the old copy. Use `--force` only if the user confirms stackfit should take it over |
 | `Skill '<name>' is enabled but not in the catalog` | Listed in `stackfit.json` but `skills/<name>/SKILL.md` is missing | `npx stackfit refresh --skill <name>` for external skills, or create the folder |
 | `<repo>: unknown pack '<name>'` | Typo in `packs` / `excludePacks` | Use a pack name from `stackfit.json` |
@@ -31,7 +31,6 @@ Messages are printed as `stackfit: <message>` and exit with code 1.
 - **Skills still load in a repo that should not have them.** Check `~/.claude/skills/` and other global folders: they apply to every repo regardless of stackfit.
 - **A Claude rule does not load.** Rules with only a `description` are not rendered for Claude Code. Give them `alwaysApply: true` or `globs:`.
 - **Codex ignores rules.** Codex reads `AGENTS.md` and `.agents/skills`, not rule files. Put must-follow rules in `AGENTS.md` or a skill.
-- **`report` shows fewer skills than `.agents/skills/` holds.** Repo-owned skills from `docs/agent/skills/` are synced but not counted in the catalog totals.
 - **Nothing in `git status` after a sync.** Expected: generated files are listed in a managed block in `.git/info/exclude`. Files you add under `docs/agent/` do show up and should be committed.
 - **After upgrading to 0.1.1, new files appear in `git status` under `.claude/` or `.cursor/`.** Older versions excluded those whole folders; now only generated files are excluded. The newly visible files are the user's own: commit them or add them to `.gitignore`.
 - **`status --check` fails in CI on a fresh checkout.** Generated files are never committed, so CI always sees them as missing. Use `sync` (validates config) in project CI and `audit` in catalog CI (recipe 8).
